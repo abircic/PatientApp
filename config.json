@@ -1,0 +1,9 @@
+{
+  "responseMessages":{
+    "successMessage" : "success",
+    "alreadyExistMessage": "already_exist",
+    "invalidRequestMessage":"invalid_request",
+    "invalidUsernameMessage":"invalid_username",
+    "invalidPasswordMessage":"invalid_password"
+  }
+}
