@@ -4,6 +4,18 @@
     "alreadyExistMessage": "already_exist",
     "invalidRequestMessage":"invalid_request",
     "invalidUsernameMessage":"invalid_username",
-    "invalidPasswordMessage":"invalid_password"
-  }
+    "invalidPasswordMessage":"invalid_password",
+    "invalidTypeMessage":"invalid_type",
+    "unexpectedErrorOccurredMessage":"unexpected_error_occurred"
+  },
+  "userRoles":[
+    {
+      "id":1,
+      "type":"Doctor"
+    },
+    {
+      "id":2,
+      "type":"Patient"
+    }
+  ]
 }

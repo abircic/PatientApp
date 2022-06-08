@@ -1,6 +1,9 @@
 const Joi = require('joi')
-
+const config = require('../config.json')
 const validateRequest = (request, schema, allowUnknown = true) => {
+  if (schema === registerRequestValidationSchema) {
+    if (!config.userRoles.some(x => x.type === request.type)) { return config.responseMessages.invalidTypeMessage }
+  }
   const result = schema.validate(request, { abortEarly: false, allowUnknown: allowUnknown })
   if (result.error) {
     return result.error.details.map(x => x.message)
@@ -48,6 +51,22 @@ const loginRequestValidationSchema = Joi.object({
     .required()
 })
 
+const updatePasswordRequestValidationSchema = Joi.object({
+  username: Joi.string()
+    .email()
+    .required(),
+
+  oldPassword: Joi.string()
+    .min(8)
+    .max(50)
+    .required(),
+
+  newPassword: Joi.string()
+    .min(8)
+    .max(50)
+    .required()
+})
+
 const usersFilterValidationSchema = Joi.object({
   type: Joi.string()
     .valid('Patient', 'Doctor'),
@@ -66,7 +85,8 @@ const usersFilterValidationSchema = Joi.object({
 const validateRegisterRequest = req => validateRequest(req, registerRequestValidationSchema)
 const validateLoginRequest = req => validateRequest(req, loginRequestValidationSchema)
 const validateUsersFilterRequest = req => validateRequest(req, usersFilterValidationSchema, false)
-
+const validateUpdatePasswordRequest = req => validateRequest(req, updatePasswordRequestValidationSchema)
 module.exports.validateRegisterRequest = validateRegisterRequest
 module.exports.validateLoginRequest = validateLoginRequest
 module.exports.validateUsersFilterRequest = validateUsersFilterRequest
+module.exports.validateUpdatePasswordRequest = validateUpdatePasswordRequest
