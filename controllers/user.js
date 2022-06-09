@@ -25,17 +25,17 @@ const registration = async(req, res) => {
     user.password = await passwordHelper.cryptPassword(user.password)
 
     await user.save()
-    res.json({ sucess: true, message: config.responseMessages.successMessage })
+    res.json({ sucess: true, message: config.responseMessages.success })
   } catch (err) {
 
     if (err.code === 11000 && err.name === 'MongoServerError') {
       res.status(400)
-        .json({ sucess: false, message: config.responseMessages.alreadyExistMessage })
+        .json({ sucess: false, message: config.responseMessages.alreadyExist })
       return
     }
     console.log(err)
     res.status(400)
-      .json({ sucess: false, message: config.responseMessages.invalidRequestMessage })
+      .json({ sucess: false, message: config.responseMessages.invalidRequest })
   }
 }
 
@@ -95,8 +95,6 @@ const updatePasword = async(req, res) => {
             message: result
           })
     }
-    // const user = await User.findOne({ username: req.body.username })
-
     const user = await User.findOneAndUpdate({ username: req.body.username }, { password: await passwordHelper.cryptPassword(req.body.newPassword) })
 
     if (!user) {
@@ -127,6 +125,24 @@ const updatePasword = async(req, res) => {
       )
   }
 }
+
+const fetchDoctors = async(_req, res) => {
+  const doctors = (await User.find({ type: 'Doctor' })).map(x => {
+    return {
+      id: x._id,
+      firstName: x.firstName,
+      lastName: x.lastName
+    }
+  })
+  return res.status(200)
+    .json(
+      {
+        success: true,
+        result: doctors
+      }
+    )
+}
 module.exports.registration = registration
 module.exports.login = login
 module.exports.updatePassword = updatePasword
+module.exports.fetchDoctors = fetchDoctors

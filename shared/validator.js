@@ -2,7 +2,7 @@ const Joi = require('joi')
 const config = require('../config.json')
 const validateRequest = (request, schema, allowUnknown = true) => {
   if (schema === registerRequestValidationSchema) {
-    if (!config.userRoles.some(x => x.type === request.type)) { return config.responseMessages.invalidTypeMessage }
+    if (!config.userRoles.some(x => x.id === request.type)) { return config.responseMessages.invalidTypeMessage }
   }
   const result = schema.validate(request, { abortEarly: false, allowUnknown: allowUnknown })
   if (result.error) {
@@ -12,7 +12,6 @@ const validateRequest = (request, schema, allowUnknown = true) => {
   return null
 }
 
-/* User Controller */
 const registerRequestValidationSchema = Joi.object({
   firstName: Joi.string()
     .alphanum()
@@ -35,9 +34,9 @@ const registerRequestValidationSchema = Joi.object({
     .max(50)
     .required(),
 
-  type: Joi.string()
+  type: Joi.number()
     .required()
-    .valid('Patient', 'Doctor')
+    .valid(1, 2)
 })
 
 const loginRequestValidationSchema = Joi.object({
@@ -69,7 +68,7 @@ const updatePasswordRequestValidationSchema = Joi.object({
 
 const usersFilterValidationSchema = Joi.object({
   type: Joi.string()
-    .valid('Patient', 'Doctor'),
+    .valid('1', '2'),
 
   firstName: Joi.string()
     .alphanum()
@@ -82,6 +81,20 @@ const usersFilterValidationSchema = Joi.object({
     .max(50)
 })
 
+const createAppointmentValidationSchema = Joi.object({
+  doctorId: Joi.string()
+    .required(),
+
+  patientId: Joi.string()
+    .required(),
+
+  fromDate: Joi.date()
+    .required(),
+
+  toDate: Joi.date()
+    .required()
+})
+const validateCreateAppointmentRequest = req => validateRequest(req, createAppointmentValidationSchema)
 const validateRegisterRequest = req => validateRequest(req, registerRequestValidationSchema)
 const validateLoginRequest = req => validateRequest(req, loginRequestValidationSchema)
 const validateUsersFilterRequest = req => validateRequest(req, usersFilterValidationSchema, false)
@@ -90,3 +103,4 @@ module.exports.validateRegisterRequest = validateRegisterRequest
 module.exports.validateLoginRequest = validateLoginRequest
 module.exports.validateUsersFilterRequest = validateUsersFilterRequest
 module.exports.validateUpdatePasswordRequest = validateUpdatePasswordRequest
+module.exports.validateCreateAppointmentRequest = validateCreateAppointmentRequest

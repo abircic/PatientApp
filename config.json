@@ -1,12 +1,15 @@
 {
   "responseMessages":{
-    "successMessage" : "success",
-    "alreadyExistMessage": "already_exist",
-    "invalidRequestMessage":"invalid_request",
-    "invalidUsernameMessage":"invalid_username",
-    "invalidPasswordMessage":"invalid_password",
-    "invalidTypeMessage":"invalid_type",
-    "unexpectedErrorOccurredMessage":"unexpected_error_occurred"
+    "success" : "success",
+    "alreadyExist": "already_exist",
+    "invalidRequest":"invalid_request",
+    "invalidUsername":"invalid_username",
+    "invalidPassword":"invalid_password",
+    "invalidType":"invalid_type",
+    "unexpectedErrorOccurred":"unexpected_error_occurred",
+    "invalidDate":"toDate must be greater than fromDate",
+    "invalidDoctorIdMessage":"invalid_doctor_id",
+    "invalidDayOfWeek":"invalid_day_of_week"
   },
   "userRoles":[
     {
@@ -17,5 +20,19 @@
       "id":2,
       "type":"Patient"
     }
-  ]
+  ],
+  "allowedDays":
+    {
+      "Tuesday":2,
+      "Wednesday":3,
+      "Friday":5
+    },
+  "appointmentStatuses":
+  {
+    "Scheduled":"scheduled",
+    "Rescheduled":"rescheduled", 
+    "Missed":"missed", 
+    "Canceled":"canceled",
+    "Done":"done"
+  }
 }
