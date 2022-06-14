@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const { create } = require('../controllers/appointment')
+const { create, updateOne } = require('../controllers/appointment')
 
 router.post('/create', create)
+router.put('/update', updateOne)
 
 module.exports = router

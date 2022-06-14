@@ -89,9 +89,6 @@ const createAppointmentValidationSchema = Joi.object({
     .required(),
 
   fromDate: Joi.date()
-    .required(),
-
-  toDate: Joi.date()
     .required()
 })
 const validateCreateAppointmentRequest = req => validateRequest(req, createAppointmentValidationSchema)
