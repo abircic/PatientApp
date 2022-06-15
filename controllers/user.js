@@ -1,6 +1,6 @@
 const User = require('../models/domain/User')
 const config = require('../config.json')
-const passwordHelper = require('../shared/helpers')
+const passwordHelper = require('../shared/bcrypt')
 const { validateRegisterRequest, validateLoginRequest, validateUpdatePasswordRequest } = require('../shared/validator')
 
 const registration = async(req, res) => {

@@ -9,7 +9,6 @@ const create = async(req, res) => {
     // validate request
     const result = validateCreateAppointmentRequest(req.body)
     if (result) {
-
       return res.status(400)
         .json(
           {
@@ -17,89 +16,37 @@ const create = async(req, res) => {
             message: result
           })
     }
-    // validate minute
+    const validationResult = await validateDateTime(new Date(req.body.fromDate))
+    if (validationResult) {
+      return res.status(400)
+        .json(
+          {
+            success: false,
+            message: validationResult
+          })
+    }
+    const validateUsersResult = await validateUsers(req.body.patientId, req.body.doctorId)
+    if (validateUsersResult.message) {
+      return res.status(400)
+        .json(
+          {
+            success: false,
+            message: validateUsersResult.message
+          })
+    }
+
     const fromDate = new Date(req.body.fromDate)
     fromDate.setSeconds(0, 0)
-    if (fromDate.getMinutes() !== 30 && fromDate.getMinutes() !== 0) {
+
+    const appointment = await validateAndSaveAppointment(fromDate, validateUsersResult.patientModel, validateUsersResult.doctorModel)
+    if (appointment) {
       return res.status(400)
-        .json(
-          {
-            success: false,
-            message: config.responseMessages.invalidMinuteInDateTime
-          }
-        )
+        .json({ success: false, message: appointment })
     }
-    // validate date time
-    if (req.body.fromDate) {
-      if (fromDate < Date.now()) {
-        return res.status(400)
-          .json(
-            {
-              success: false,
-              message: config.responseMessages.invalidFrom
-            }
-          )
-      }
-    }
-    // validate day of week
-    const isValidDate = Object.values(config.allowedDays)
-      .some(x => x === new Date(req.body.fromDate)
-        .getDay())
-    if (!isValidDate) {
-      return res.status(400)
-        .json(
-          {
-            sucess: false,
-            message: config.responseMessages.invalidDayOfWeek
-          }
-        )
-    }
-    // validate patient
-    const patient = await User.findById({ _id: req.body.patientId })// todo id from JWT
-    if (!patient) {
-      return res.status(400)
-        .json(
-          {
-            sucess: false,
-            message: 'invalid_patient_id'
-          })
-    }
-    // validate doctor
-    const doctor = await User.findById({ _id: req.body.doctorId })
-    if (!doctor) {
-      return res.status(400)
-        .json(
-          {
-            sucess: false,
-            message: config.responseMessages.invalidDoctorId
-          })
-    }
-    // validate doctor appointments
-    const appointments = await Appointment.find({ doctorId: doctor._id })
-    if (appointments.some(x => x.fromDate.getTime() === fromDate.getTime())) {
-      return res.status(400)
-        .json(
-          {
-            success: false,
-            message: config.responseMessages.invalidAppointmentDate
-          }
-        )
-    }
-    const appointment = new Appointment(
-      {
-        createdDate: Date.now(),
-        fromDate: fromDate,
-        toDate: date.addMinutes(fromDate, 30),
-        patient: patient,
-        doctor: doctor,
-        status: config.appointmentStatuses.Scheduled
-      }
-    )
-    await appointment.save()
-    res.json({ sucess: true, message: config.responseMessages.success })
+    return res.status(200)
+      .json({ success: true, message: config.responseMessages.success })
   } catch (err) {
-    console.log(err)
-    res.json({ sucess: true, message: config.responseMessages.unexpectedErrorOccurred })
+    res.json({ sucess: true, message: err.message })
   }
 }
 
@@ -117,39 +64,16 @@ const updateOne = async(req, res) => {
     }
     // validate date time
     if (req.body.fromDate) {
-      // validate minute
       const fromDate = new Date(req.body.fromDate)
       fromDate.setSeconds(0, 0)
-      if (fromDate.getMinutes() !== 30 && fromDate.getMinutes() !== 0) {
+      const validationResult = await validateDateTime(new Date(req.body.fromDate))
+      if (validationResult) {
         return res.status(400)
           .json(
             {
               success: false,
-              message: config.responseMessages.invalidMinuteInDateTime
-            }
-          )
-      }
-      if (fromDate < Date.now()) {
-        return res.status(400)
-          .json(
-            {
-              success: false,
-              message: config.responseMessages.invalidFrom
-            }
-          )
-      }
-      // validate day of week
-      const isValidDate = Object.values(config.allowedDays)
-        .some(x => x === new Date(req.body.fromDate)
-          .getDay())
-      if (!isValidDate) {
-        return res.status(400)
-          .json(
-            {
-              sucess: false,
-              message: config.responseMessages.invalidDayOfWeek
-            }
-          )
+              message: validationResult
+            })
       }
       // validate doctor appointments
       const appointments = await Appointment.find({ doctorId: appointment.doctorId })
@@ -172,7 +96,7 @@ const updateOne = async(req, res) => {
           .json(
             {
               success: false,
-              message: config.responseMessages.invalid_status
+              message: config.responseMessages.invalidStatus
             }
           )
       }
@@ -184,6 +108,64 @@ const updateOne = async(req, res) => {
     res.json({ sucess: true, message: err.message })
   }
 }
+const validateDateTime = async(fromDate) => {
 
+  const dateNow = new Date(Date.now())
+  const onePlusDay = date.addDays(dateNow, 1)
+  if (onePlusDay > fromDate) { return config.responseMessages.invalidAppointmentDateToday }
+
+  // validate minute
+  if (fromDate.getMinutes() !== 30 && fromDate.getMinutes() !== 0) {
+    return config.responseMessages.invalidMinuteInDateTime
+  }
+
+  // validate date time
+  if (fromDate < Date.now()) {
+    return config.responseMessages.invalidFrom
+  }
+
+  // validate day of week
+  const isValidDate = Object.values(config.allowedDays)
+    .some(x => x === new Date(fromDate)
+      .getDay())
+  if (!isValidDate) {
+    return config.responseMessages.invalidDayOfWeek
+  }
+}
+
+const validateUsers = async(patient, doctor) => {
+
+  // validate patient
+  const patientModel = await User.findById({ _id: patient })// todo id from JWT
+  if (!patientModel) {
+    return { message: 'invalid_patient_id' }
+  }
+
+  // validate doctor
+  const doctorModel = await User.findById({ _id: doctor })
+  if (!doctorModel) {
+    return { message: config.responseMessages.invalidDoctorId }
+  }
+  return { patientModel: patientModel, doctorModel: doctorModel }
+}
+
+const validateAndSaveAppointment = async(fromDate, patientModel, doctorModel) => {
+  // validate doctor appointments
+  const appointments = await Appointment.find({ doctorId: doctorModel._id })
+  if (appointments.some(x => x.fromDate.getTime() === fromDate.getTime())) {
+    return config.responseMessages.invalidAppointmentDate
+  }
+  const appointment = new Appointment(
+    {
+      createdDate: Date.now(),
+      fromDate: fromDate,
+      toDate: date.addMinutes(fromDate, 30),
+      patient: patientModel,
+      doctor: doctorModel,
+      status: config.appointmentStatuses.Scheduled
+    }
+  )
+  await appointment.save()
+}
 module.exports.create = create
 module.exports.updateOne = updateOne

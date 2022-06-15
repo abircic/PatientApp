@@ -14,7 +14,8 @@
     "invalidMinuteInDateTime":"minute_must_be_0_or_30",
     "invalidAppoitnment":"invalid_appointment",
     "invalidFrom":"from_to_must_be_in_future",
-    "invalid_status":"invalid_status"
+    "invalidStatus":"invalid_status",
+    "invalidAppointmentDateToday":"appointment_can_not_be_today"
   },
   "userRoles":[
     {
