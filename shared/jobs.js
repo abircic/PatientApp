@@ -5,7 +5,7 @@ const config = require('../config.json')
 const date = require('date-and-time')
 const { sendMail } = require('../shared/mail')
 
-exports.getAppointments = async() => {
+exports.getAppointments = async(transporter) => {
   const dateNow = new Date(Date.now())
   const onePlusDay = date.addDays(dateNow, 1)
   const appointments = await Appointment.aggregate([
@@ -30,7 +30,7 @@ exports.getAppointments = async() => {
   if (appointments.length > 0) {
     for (const app of appointments) {
       try {
-        await sendMail(app)
+        await sendMail(app, transporter)
         await saveNotification(app)
       } catch (err) {
         console.log(err)

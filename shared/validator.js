@@ -96,8 +96,5 @@ const validateRegisterRequest = req => validateRequest(req, registerRequestValid
 const validateLoginRequest = req => validateRequest(req, loginRequestValidationSchema)
 const validateUsersFilterRequest = req => validateRequest(req, usersFilterValidationSchema, false)
 const validateUpdatePasswordRequest = req => validateRequest(req, updatePasswordRequestValidationSchema)
-module.exports.validateRegisterRequest = validateRegisterRequest
-module.exports.validateLoginRequest = validateLoginRequest
-module.exports.validateUsersFilterRequest = validateUsersFilterRequest
-module.exports.validateUpdatePasswordRequest = validateUpdatePasswordRequest
-module.exports.validateCreateAppointmentRequest = validateCreateAppointmentRequest
+
+module.exports = { validateRegisterRequest, validateLoginRequest, validateUsersFilterRequest, validateUpdatePasswordRequest, validateCreateAppointmentRequest }

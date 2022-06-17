@@ -1,0 +1,16 @@
+services:
+  api:
+    build: .
+    ports:
+      - 3000-3002:3000
+    environment:
+      - PORT=3000
+      - DB_CONNECTION_STRING=mongodb+srv://antebircic:agilathon@cluster0.i66v0.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+    restart: always
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          memory: 300m
+        reservations:
+          memory: 100m

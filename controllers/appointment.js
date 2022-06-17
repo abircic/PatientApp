@@ -6,6 +6,7 @@ const date = require('date-and-time')
 
 const create = async(req, res) => {
   try {
+
     // validate request
     const result = validateCreateAppointmentRequest(req.body)
     if (result) {
@@ -16,7 +17,8 @@ const create = async(req, res) => {
             message: result
           })
     }
-    const validationResult = await validateDateTime(new Date(req.body.fromDate))
+    const { fromDate, doctorId, patientId } = req.body
+    const validationResult = await validateDateTime(new Date(fromDate))
     if (validationResult) {
       return res.status(400)
         .json(
@@ -25,7 +27,7 @@ const create = async(req, res) => {
             message: validationResult
           })
     }
-    const validateUsersResult = await validateUsers(req.body.patientId, req.body.doctorId)
+    const validateUsersResult = await validateUsers(patientId, doctorId)
     if (validateUsersResult.message) {
       return res.status(400)
         .json(
@@ -35,16 +37,16 @@ const create = async(req, res) => {
           })
     }
 
-    const fromDate = new Date(req.body.fromDate)
-    fromDate.setSeconds(0, 0)
+    const newFromDate = new Date(fromDate)
+    newFromDate.setSeconds(0, 0)
 
-    const appointment = await validateAndSaveAppointment(fromDate, validateUsersResult.patientModel, validateUsersResult.doctorModel)
-    if (appointment) {
+    const appointmentModel = await validateAndSaveAppointment(newFromDate, validateUsersResult.patientModel, validateUsersResult.doctorModel)
+    if (appointmentModel.message) {
       return res.status(400)
-        .json({ success: false, message: appointment })
+        .json({ success: false, message: appointmentModel.message })
     }
     return res.status(200)
-      .json({ success: true, message: config.responseMessages.success })
+      .json({ success: true, message: config.responseMessages.success, appointmentId: appointmentModel.appointment._id })
   } catch (err) {
     res.json({ sucess: true, message: err.message })
   }
@@ -103,7 +105,7 @@ const updateOne = async(req, res) => {
       appointment.status = req.body.status
     }
     await appointment.save()
-    res.json({ sucess: true, message: config.responseMessages.success })
+    res.json({ sucess: true, message: config.responseMessages.success, appointmentId: appointment._id })
   } catch (err) {
     res.json({ sucess: true, message: err.message })
   }
@@ -133,16 +135,16 @@ const validateDateTime = async(fromDate) => {
   }
 }
 
-const validateUsers = async(patient, doctor) => {
+const validateUsers = async(patientId, doctorId) => {
 
   // validate patient
-  const patientModel = await User.findById({ _id: patient })// todo id from JWT
+  const patientModel = await User.findById({ _id: patientId })// todo id from JWT
   if (!patientModel) {
     return { message: 'invalid_patient_id' }
   }
 
   // validate doctor
-  const doctorModel = await User.findById({ _id: doctor })
+  const doctorModel = await User.findById({ _id: doctorId })
   if (!doctorModel) {
     return { message: config.responseMessages.invalidDoctorId }
   }
@@ -153,7 +155,7 @@ const validateAndSaveAppointment = async(fromDate, patientModel, doctorModel) =>
   // validate doctor appointments
   const appointments = await Appointment.find({ doctorId: doctorModel._id })
   if (appointments.some(x => x.fromDate.getTime() === fromDate.getTime())) {
-    return config.responseMessages.invalidAppointmentDate
+    return { message: config.responseMessages.invalidAppointmentDate }
   }
   const appointment = new Appointment(
     {
@@ -166,6 +168,6 @@ const validateAndSaveAppointment = async(fromDate, patientModel, doctorModel) =>
     }
   )
   await appointment.save()
+  return { appointment: appointment }
 }
-module.exports.create = create
-module.exports.updateOne = updateOne
+module.exports = { create, updateOne }

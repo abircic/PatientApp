@@ -1,8 +1,7 @@
 const nodemailer = require('nodemailer')
 
-exports.sendMail = async(appointment) => {
+const sendMail = async(appointment, transporter) => {
   try {
-    const transporter = await createTransport()
     const result = await transporter.sendMail(getMailOptions(appointment))
     console.debug(result)
     if (result.rejected.some(x => x)) {
@@ -34,3 +33,5 @@ const getMailOptions = appointment => {
     html: `<p>You have meeting at: ${appointment.fromDate}</p>`// plain text body
   }
 }
+
+module.exports = { createTransport, sendMail }

@@ -29,8 +29,8 @@ Type field determines if user is registering as doctor or patient. “1" stand f
 **Request**
 ```
 {
-	"firstName":"testName",
-	"lastName"  :  "lastName",
+	"firstName": "testName",
+	"lastName": "lastName",
 	"type":"1",
 	"username":"test@test.com",
 	"password":"pass1234"
@@ -140,7 +140,7 @@ status code: 400
 	"message":"invalid_password"
 }
 ```
-### PUT http://localhost:3000/user/fetchDoctors
+### GET http://localhost:3000/user/fetchDoctors
 Used for fetching doctors 
 
 **Response**
@@ -179,5 +179,92 @@ Used for fetching doctors
 
 		}
 	]
+}
+```
+### POST http://localhost:3000/appointment/create
+
+**Request**
+```
+{
+    "doctorId":"6241b1a4165a23dce6f1d386",
+    "patientId":"6241b1bb165a23dce6f1d388",
+    "fromDate":"2022-04-06T17:30:05.511Z"
+}
+```
+**Response**
+```
+{
+    "success": true,
+    "message": "success"
+}
+```
+**Example error response**
+status code: 400
+**Response**
+```
+{
+    "success": false,
+    "message": "invalid_day_of_week"
+}
+```
+**Response**
+```
+{
+	"success":"false"
+	"message":"invalid_password"
+}
+```
+**Response**
+```
+{
+    "success": false,
+    "message": "appointment_can_not_be_today"
+}
+```
+**Response**
+```
+{
+    "success": false,
+    "message": "invalid_doctor_id"
+}
+```
+### PUT http://localhost:3000/appointment/update
+
+**Request**
+```
+{
+    "id":"62441da4c5acba2afa443bb1",
+    "fromDate":"2022-04-06T20:30:05.511Z",
+    "status":"done"
+}
+```
+**Response**
+```
+{
+    "success": true,
+    "message": "success"
+}
+```
+**Example error response**
+status code: 400
+**Response**
+```
+{
+    "success": false,
+    "message": "doctor_already_has_an_appointment_at_this_time"
+}
+```
+**Response**
+```
+{
+    "success": false,
+    "message": "invalid_day_of_week"
+}
+```
+**Response**
+```
+{
+    "success": false,
+    "message": "invalid_status"
 }
 ```

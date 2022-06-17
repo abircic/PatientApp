@@ -84,7 +84,7 @@ const login = async(req, res) => {
   }
 }
 
-const updatePasword = async(req, res) => {
+const updatePassword = async(req, res) => {
   try {
     const result = validateUpdatePasswordRequest(req.body)
     if (result) {
@@ -142,7 +142,4 @@ const fetchDoctors = async(_req, res) => {
       }
     )
 }
-module.exports.registration = registration
-module.exports.login = login
-module.exports.updatePassword = updatePasword
-module.exports.fetchDoctors = fetchDoctors
+module.exports = { registration, login, updatePassword, fetchDoctors }
