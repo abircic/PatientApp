@@ -40,5 +40,12 @@
     "Missed":"missed", 
     "Canceled":"canceled",
     "Done":"done"
+  },
+  "errorNames":
+  {
+    "Validation":"ValidationError",
+    "NotFound":"NotFoundError",
+    "Mongo":"MongoServerError"
   }
+  
 }

@@ -148,35 +148,22 @@ Used for fetching doctors
 {
 
 	"success":  true,
-
+	"message":	"success",
 	"result":  [
-
 		{
-
 			"id":  "623d99e4bee2d1d33c059546",
-
 			"firstName":  "testName",
-
 			"lastName":  "lastName"
-
 		},
 		{
-
 			"id":  "623dca52caca754edbd2ebe3",
-
 			"firstName":  "testName",
-
 			"lastName":  "lastName"
-
 		},
 		{
-
 			"id":  "623dcaa06bc8967ee7316801",
-
 			"firstName":  "testName",
-
 			"lastName":  "lastName"
-
 		}
 	]
 }
@@ -195,7 +182,8 @@ Used for fetching doctors
 ```
 {
     "success": true,
-    "message": "success"
+    "message": "success",
+		"appointmentId:"6241b1a4165a23dce6f1d386"
 }
 ```
 **Example error response**
@@ -242,7 +230,8 @@ status code: 400
 ```
 {
     "success": true,
-    "message": "success"
+    "message": "success",
+		"appointment:" "id"
 }
 ```
 **Example error response**

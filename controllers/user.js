@@ -127,7 +127,7 @@ const updatePassword = async(req, res) => {
 }
 
 const fetchDoctors = async(_req, res) => {
-  const doctors = (await User.find({ type: 'Doctor' })).map(x => {
+  const doctors = (await User.find({ type: 1 })).map(x => {
     return {
       id: x._id,
       firstName: x.firstName,
@@ -138,6 +138,7 @@ const fetchDoctors = async(_req, res) => {
     .json(
       {
         success: true,
+        message: config.responseMessages.success,
         result: doctors
       }
     )

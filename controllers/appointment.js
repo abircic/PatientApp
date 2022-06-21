@@ -3,66 +3,39 @@ const User = require('../models/domain/User')
 const config = require('../config.json')
 const { validateCreateAppointmentRequest } = require('../shared/validator')
 const date = require('date-and-time')
+const { ValidationError } = require('../shared/error')
 
-const create = async(req, res) => {
-  try {
-
-    // validate request
-    const result = validateCreateAppointmentRequest(req.body)
-    if (result) {
-      return res.status(400)
-        .json(
-          {
-            success: false,
-            message: result
-          })
-    }
-    const { fromDate, doctorId, patientId } = req.body
-    const validationResult = await validateDateTime(new Date(fromDate))
-    if (validationResult) {
-      return res.status(400)
-        .json(
-          {
-            success: false,
-            message: validationResult
-          })
-    }
-    const validateUsersResult = await validateUsers(patientId, doctorId)
-    if (validateUsersResult.message) {
-      return res.status(400)
-        .json(
-          {
-            success: false,
-            message: validateUsersResult.message
-          })
-    }
-
-    const newFromDate = new Date(fromDate)
-    newFromDate.setSeconds(0, 0)
-
-    const appointmentModel = await validateAndSaveAppointment(newFromDate, validateUsersResult.patientModel, validateUsersResult.doctorModel)
-    if (appointmentModel.message) {
-      return res.status(400)
-        .json({ success: false, message: appointmentModel.message })
-    }
-    return res.status(200)
-      .json({ success: true, message: config.responseMessages.success, appointmentId: appointmentModel.appointment._id })
-  } catch (err) {
-    res.json({ sucess: true, message: err.message })
+const create = async(req, res, next) => {
+  // validate request
+  const result = validateCreateAppointmentRequest(req.body)
+  if (result) {
+    throw new ValidationError(result)
   }
+  const { fromDate, doctorId, patientId } = req.body
+  const validationResult = await validateDateTime(new Date(fromDate))
+  if (validationResult) {
+    throw new ValidationError(validationResult)
+  }
+  const validateUsersResult = await validateUsers(patientId, doctorId)
+  if (validateUsersResult.message) {
+    throw new ValidationError(validateUsersResult.message)
+  }
+  const newFromDate = new Date(fromDate)
+  newFromDate.setSeconds(0, 0)
+
+  const appointmentModel = await validateAndSaveAppointment(newFromDate, validateUsersResult.patientModel, validateUsersResult.doctorModel)
+  if (appointmentModel.message) {
+    throw new ValidationError(appointmentModel.message)
+  }
+  res.status(200)
+    .json({ success: true, message: config.responseMessages.success, appointmentId: appointmentModel.appointment._id })
 }
 
 const updateOne = async(req, res) => {
   try {
     const appointment = await Appointment.findById({ _id: req.body.id })
     if (!appointment) {
-      return res.status(400)
-        .json(
-          {
-            sucess: false,
-            message: config.responseMessages.invalidAppoitnment
-          }
-        )
+      throw new ValidationError(config.responseMessages.invalidAppoitnment)
     }
     // validate date time
     if (req.body.fromDate) {
@@ -70,23 +43,12 @@ const updateOne = async(req, res) => {
       fromDate.setSeconds(0, 0)
       const validationResult = await validateDateTime(new Date(req.body.fromDate))
       if (validationResult) {
-        return res.status(400)
-          .json(
-            {
-              success: false,
-              message: validationResult
-            })
+        throw new ValidationError(validationResult)
       }
       // validate doctor appointments
       const appointments = await Appointment.find({ doctorId: appointment.doctorId })
       if (appointments.some(x => x.fromDate.getTime() === fromDate.getTime())) {
-        return res.status(400)
-          .json(
-            {
-              success: false,
-              message: config.responseMessages.invalidAppointmentDate
-            }
-          )
+        throw new ValidationError(config.responseMessages.invalidAppointmentDate)
       }
       appointment.fromDate = fromDate
       appointment.toDate = date.addMinutes(fromDate, 30)
@@ -94,13 +56,7 @@ const updateOne = async(req, res) => {
     if (req.body.status) {
       if (!Object.values(config.appointmentStatuses)
         .some(x => x === req.body.status)) {
-        return res.status(400)
-          .json(
-            {
-              success: false,
-              message: config.responseMessages.invalidStatus
-            }
-          )
+        throw new ValidationError(config.responseMessages.invalidStatus)
       }
       appointment.status = req.body.status
     }
