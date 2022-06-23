@@ -10,7 +10,7 @@ This is the backend application for patients and doctors involved in a process o
 
 ## Instructions for starting application
 Instructions for starting an application:
-1. clone repository with “git clone https://github.com/abircic/PatientApp.git"
+1. clone repository with “git clone https://github.com/agilathon/ante_bircic.git"
 2. open terminal and run “npm install”
 3.  create `.env` file with configuration
  ```

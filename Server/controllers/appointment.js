@@ -32,39 +32,35 @@ const create = async(req, res, next) => {
 }
 
 const updateOne = async(req, res) => {
-  try {
-    const appointment = await Appointment.findById({ _id: req.body.id })
-    if (!appointment) {
-      throw new ValidationError(config.responseMessages.invalidAppoitnment)
-    }
-    // validate date time
-    if (req.body.fromDate) {
-      const fromDate = new Date(req.body.fromDate)
-      fromDate.setSeconds(0, 0)
-      const validationResult = await validateDateTime(new Date(req.body.fromDate))
-      if (validationResult) {
-        throw new ValidationError(validationResult)
-      }
-      // validate doctor appointments
-      const appointments = await Appointment.find({ doctorId: appointment.doctorId })
-      if (appointments.some(x => x.fromDate.getTime() === fromDate.getTime())) {
-        throw new ValidationError(config.responseMessages.invalidAppointmentDate)
-      }
-      appointment.fromDate = fromDate
-      appointment.toDate = date.addMinutes(fromDate, 30)
-    }
-    if (req.body.status) {
-      if (!Object.values(config.appointmentStatuses)
-        .some(x => x === req.body.status)) {
-        throw new ValidationError(config.responseMessages.invalidStatus)
-      }
-      appointment.status = req.body.status
-    }
-    await appointment.save()
-    res.json({ sucess: true, message: config.responseMessages.success, appointmentId: appointment._id })
-  } catch (err) {
-    res.json({ sucess: true, message: err.message })
+  const appointment = await Appointment.findById({ _id: req.body.id })
+  if (!appointment) {
+    throw new ValidationError(config.responseMessages.invalidAppoitnment)
   }
+  // validate date time
+  if (req.body.fromDate) {
+    const fromDate = new Date(req.body.fromDate)
+    fromDate.setSeconds(0, 0)
+    const validationResult = await validateDateTime(new Date(req.body.fromDate))
+    if (validationResult) {
+      throw new ValidationError(validationResult)
+    }
+    // validate doctor appointments
+    const appointments = await Appointment.find({ doctorId: appointment.doctorId })
+    if (appointments.some(x => x.fromDate.getTime() === fromDate.getTime())) {
+      throw new ValidationError(config.responseMessages.invalidAppointmentDate)
+    }
+    appointment.fromDate = fromDate
+    appointment.toDate = date.addMinutes(fromDate, 30)
+  }
+  if (req.body.status) {
+    if (!Object.values(config.appointmentStatuses)
+      .some(x => x === req.body.status)) {
+      throw new ValidationError(config.responseMessages.invalidStatus)
+    }
+    appointment.status = req.body.status
+  }
+  await appointment.save()
+  res.json({ sucess: true, message: config.responseMessages.success, appointmentId: appointment._id })
 }
 const validateDateTime = async(fromDate) => {
 
