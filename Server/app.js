@@ -3,9 +3,14 @@ const app = express()
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const cron = require('node-cron')
+const cors = require('cors')
 require('dotenv')
   .config()
 app.use(bodyParser.json())
+app.use(cors({
+  origin: 'http://localhost:3001'
+}))
+app.use(express.json())
 
 // Import Routes
 const userRoute = require('./routes/user')

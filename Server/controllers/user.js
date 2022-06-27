@@ -42,7 +42,7 @@ const login = async(req, res) => {
       .json(
         {
           sucess: false,
-          message: config.responseMessages.invalidUsernameMessage
+          message: config.responseMessages.invalidUsername
         })
   }
   if (!(await passwordHelper.comparePassword(req.body.password, user.password))) {
@@ -50,7 +50,7 @@ const login = async(req, res) => {
       .json(
         {
           sucess: false,
-          message: config.responseMessages.invalidPasswordMessage
+          message: config.responseMessages.invalidPassword
         })
   }
   return res.status(200)

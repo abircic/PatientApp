@@ -2,7 +2,7 @@ const Joi = require('joi')
 const config = require('../config.json')
 const validateRequest = (request, schema, allowUnknown = true) => {
   if (schema === registerRequestValidationSchema) {
-    if (!config.userRoles.some(x => x.id === request.type)) { return config.responseMessages.invalidTypeMessage }
+    if (!config.userRoles.some(x => x.id === request.type)) { return config.responseMessages.invalidType }
   }
   const result = schema.validate(request, { abortEarly: false, allowUnknown: allowUnknown })
   if (result.error) {

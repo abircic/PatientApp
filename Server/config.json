@@ -19,11 +19,11 @@
   },
   "userRoles":[
     {
-      "id":1,
+      "id":"1",
       "type":"Doctor"
     },
     {
-      "id":2,
+      "id":"2",
       "type":"Patient"
     }
   ],
