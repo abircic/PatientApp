@@ -13,7 +13,7 @@ exports.rolesMigration = async() => {
   try {
     const allRoles = config.userRoles
     const savedRoles = await Role.find()
-    const rolesToInsert = allRoles.filter(x => !savedRoles.some(y => x.id === y.id))
+    const rolesToInsert = allRoles.filter(x => !savedRoles.some(y => x.id == y.id))
       .map(x => new Role(x))
 
     await Role.bulkSave(rolesToInsert)

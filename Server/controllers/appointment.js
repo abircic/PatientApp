@@ -60,7 +60,7 @@ const updateOne = async(req, res) => {
     appointment.status = req.body.status
   }
   await appointment.save()
-  res.json({ sucess: true, message: config.responseMessages.success, appointmentId: appointment._id })
+  res.json({ success: true, message: config.responseMessages.success, appointmentId: appointment._id })
 }
 const validateDateTime = async(fromDate) => {
 
@@ -122,4 +122,26 @@ const validateAndSaveAppointment = async(fromDate, patientModel, doctorModel) =>
   await appointment.save()
   return { appointment: appointment }
 }
-module.exports = { create, updateOne }
+
+const fetchByUserId = async(req, res) => {
+  const { id, type } = req.query
+  if (type === '1') {
+    const appointment = await (await Appointment.find({ doctor: id })
+      .populate('patient')
+      .exec()).map(x => {
+      return {
+        fromDate: x.fromDate,
+        toDate: x.toDate,
+        patient: x.patient.username
+      }
+    })
+    return res.json({ success: true, appointments: appointment })
+  } else if (type === '2') {
+    const appointment = await Appointment.find({ patient: id })
+    return res.json({ success: true, appointments: appointment })
+  } else {
+    return res.status(400)
+      .json({ success: false, message: config.responseMessages.invalidStatus })
+  }
+}
+module.exports = { create, updateOne, fetchByUserId }
