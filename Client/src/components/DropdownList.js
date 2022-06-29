@@ -1,0 +1,59 @@
+import axios from 'axios'
+import { useRef, useState, useEffect } from 'react'
+import { useContext } from "react"
+import UserContext from '../context'
+
+const Dropdown = (props) => (
+  <div className="form-group">
+
+    <select
+      className="form-control"
+      name={props.name}
+      onChange={props.onDropdownChange}
+    >
+      <option defaultValue>Select</option>
+      {props.options.map((item, index) => (
+        <option key={index} value={item.id}>
+          {item.firstName} {item.lastName}
+        </option>
+      ))}
+    </select>
+  </div>
+)
+
+const DropdownList = () => {
+  const [name, setName] = useState(null)
+  const [list, setList] = useState(null)
+  const isInitalMount = useRef(true)
+  const userContext = useContext(UserContext)
+
+  useEffect(() => {
+    if(isInitalMount.current){
+      isInitalMount.current = false
+      async function fetchData()
+      {
+          const response = await axios.get('http://localhost:3000/user/fetchDoctors')
+          setList(response.data.result)
+      }
+      fetchData()
+    }
+  }, [])
+
+  const onDropdownChange = (e) => {
+    userContext.setDoctorId(e.target.value)
+    setName(e.target.value)
+  }
+
+  return (
+    <div>
+      <h2>Choose doctor</h2>
+      <Dropdown
+        name={name}
+        options={list ? list : []}
+        onDropdownChange={onDropdownChange}
+      />
+    </div>
+  )
+}
+
+export default DropdownList

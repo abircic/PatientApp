@@ -10,6 +10,7 @@ const Nav = () =>{
       <div className="controls-container">
         <div className="icon" onClick={()=>navigate("/user/login")}>Login</div>
         <div className="icon" onClick={()=>navigate("/user/register")}>Registration</div>
+        <div className="icon" onClick={()=>navigate("/appointment/create")}>Appointment</div>
       </div>
     </nav>
   )

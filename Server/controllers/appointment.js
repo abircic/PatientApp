@@ -132,12 +132,24 @@ const fetchByUserId = async(req, res) => {
       return {
         fromDate: x.fromDate,
         toDate: x.toDate,
-        patient: x.patient.username
+        firstName: x.patient.firstName,
+        lastName: x.patient.lastName,
+        status: x.status
       }
     })
     return res.json({ success: true, appointments: appointment })
   } else if (type === '2') {
-    const appointment = await Appointment.find({ patient: id })
+    const appointment = await (await Appointment.find({ patient: id })
+      .populate('doctor')
+      .exec()).map(x => {
+      return {
+        fromDate: x.fromDate,
+        toDate: x.toDate,
+        firstName: x.doctor.firstName,
+        lastName: x.doctor.lastName,
+        status: x.status
+      }
+    })
     return res.json({ success: true, appointments: appointment })
   } else {
     return res.status(400)

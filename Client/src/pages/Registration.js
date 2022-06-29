@@ -6,6 +6,7 @@ const Registration = () =>{
   const[formData, setFormData] = useState()
   const navigate = useNavigate()
   const [errorMessage, setErrorMessage] = useState('');
+  
   const handleSubmit = async (e)=>{
      e.preventDefault()
     try{
@@ -37,7 +38,7 @@ const Registration = () =>{
     }))
   }
   return (
-    <div className="login-form">
+    <div className="registration-form">
     <form onSubmit= {handleSubmit}>
       <label htmlFor="firstName">First name</label>
       <input

@@ -57,7 +57,9 @@ const login = async(req, res) => {
     .json(
       {
         sucess: true,
-        message: config.responseMessages.successMessage
+        message: config.responseMessages.success,
+        id: user._id,
+        type: user.type
       })
 }
 

@@ -1,27 +1,33 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import UserContext from "../context"
 
-const Login = () =>{
+const Login = () =>{ 
   const[formData, setFormData] = useState()
   const navigate = useNavigate()
   const [errorMessage, setErrorMessage] = useState('');
+
+  const { setUser} = useContext(UserContext)
   const handleSubmit = async (e)=>{
      e.preventDefault()
     try{
-      await axios.post('http://localhost:3000/user/login',
+      const response = await axios.post('http://localhost:3000/user/login',
         formData
       )
+      setUser({id:response.data.id, type : response.data.type, username : formData.username})
+      //navigate("/appointment/fetch")
       navigate("/")
     }
     catch(err)
     {
-      if(err.response.status === 400)
+      if(err.response && err.response.status === 400)
       {
         setErrorMessage(err.response.data.message)
         //alert(err.response.data.message);
       }
       else{
+        console.log(err)
         setErrorMessage("Oops something went wrong...")
       }
     }
