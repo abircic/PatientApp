@@ -9,8 +9,6 @@ const Dashboard = () =>{
   const {user, setUser} = useContext(UserContext)
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate()
-
-console.log("Dashboard",user)
   useEffect(() => {
     if(!user) {
       navigate("/user/login")
@@ -29,11 +27,8 @@ console.log("Dashboard",user)
   }, [])
   return (
     <div className="dashboard">
-    <h1>My Appointments </h1>
-    <h2>Username: {user?.username}</h2>
-    <h3>Type:{user?.type === 1 ? "Doctor": "Patient"}</h3>
-    <Link to="/appointment/create">Create appointment</Link>
-
+    <h1 style={{fontSize : 30, marginTop: 20, textDecoration: "underline"}}>My appointments </h1>
+    {user?.type === 2 && <button type="button" className="btn btn-outline-success" onClick={() => navigate("/appointment/create")}>Create appointment</button>}
     <div className="appointent-container">
       {appointments && appointments?.sort((a,b) => new Date(a.fromDate) - new Date(b.fromDate))
       .map(x => (<AppointmentCard appointment = {x} key={x.fromDate}/>))}

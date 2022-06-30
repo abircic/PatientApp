@@ -1,14 +1,28 @@
 
 const AppointmentCard = ({appointment}) => {
+  const fromDate = new Date(appointment.fromDate);
+  const toDate = new Date(appointment.toDate);
   return(
-    <div className="appointment-card">
-      <h3>From date: {appointment.fromDate}</h3>
-      <h3>To date:{appointment.toDate}</h3>
-      <h3>First name: {appointment.firstName}</h3>
-      <h3>Last name: {appointment.lastName}</h3>
-      <h3>Status: {appointment.status}</h3>
-      <br/>
-    </div>
+    <table className="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">From date</th>
+      <th scope="col">To date</th>
+      <th scope="col">First name</th>
+      <th scope="col">Last name</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{fromDate.toLocaleString()}</td>
+      <td>{toDate.toLocaleString()}</td>
+      <td>{appointment.firstName}</td>
+      <td>{appointment.lastName}</td>
+      <td>{appointment.status}</td>
+    </tr>
+  </tbody>
+</table>
   )
 }
 

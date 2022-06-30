@@ -4,12 +4,12 @@ html, body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-.app{
+/* .app{
   display: flex;
-}
+} */
 
-/*---Nav---*/
-nav {
+/* ---Nav--- */
+ /* nav {
   height: 100vh;
   background-color: rgb(43, 43,63);
   color: white;
@@ -29,18 +29,46 @@ nav .controls-container
 
 nav .logo-container img {
   width: 100px;
-}
-
-/*---Login---*/
-
-.login {
-  padding: 30px;
-  width: 100%;
-}
-.login-form{
-  display: flex;
-  width: 100%;
+}  */
+nav .logo-container img{
+  width: 35px;
 }
 .error{
 color: red;
+}
+
+.user-type-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 0;
+  padding-right: 70%;
+  align-items: center;
+  margin-bottom: 50px;
+}
+.user-info-container{
+position: absolute;
+right: 0;
+display: flex;
+flex-direction: row;
+}
+.appointment-container{
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.appointment-input-container{
+  margin-bottom: 50;
+  height: 180px;
+  width: 50%;
+}
+.dropdown-container {
+  padding: 3rem;
+  padding-left: 0;
+  height: 180px;
+  width: 150%;
+}
+h1 {
+  font-size: 40px;
 }

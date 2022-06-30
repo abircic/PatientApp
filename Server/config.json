@@ -7,7 +7,7 @@
     "invalidPassword":"invalid_password",
     "invalidType":"invalid_type",
     "unexpectedErrorOccurred":"unexpected_error_occurred",
-    "invalidDate":"toDate must be greater than fromDate",
+    "invalidDate":"toDate_must_be_greater_than _fromDate",
     "invalidDoctorId":"invalid_doctor_id",
     "invalidDayOfWeek":"invalid_day_of_week",
     "invalidAppointmentDate":"doctor_already_has_an_appointment_at_this_time",
@@ -15,7 +15,8 @@
     "invalidAppoitnment":"invalid_appointment",
     "invalidFrom":"from_to_must_be_in_future",
     "invalidStatus":"invalid_status",
-    "invalidAppointmentDateToday":"appointment_can_not_be_today"
+    "invalidAppointmentDateToday":"appointment_can_not_be_in_range_of_24_hours",
+    "invalidUpdatePassword":"current_password_can_not_be_with_new_password"
   },
   "userRoles":[
     {

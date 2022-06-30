@@ -6,6 +6,7 @@ import Nav from "./components/Nav"
 import Appointment from "./pages/Appointment";
 import  UserContext  from "./context";
 import { useState } from "react";
+import UpdatePassword from "./pages/UpdatePassword";
 const App = () => {
 
   const [user, setUser] = useState(null)
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/" element={<Dashboard/>}></Route>
         <Route path="/user/login" element={<Login/>}></Route>
         <Route path="/user/register" element={<Registration></Registration>}></Route>
+        <Route path="/user/updatePassword" element={<UpdatePassword></UpdatePassword>}></Route>
         <Route path="/appointment/create" element={<Appointment></Appointment>}></Route>
       </Routes>
       </BrowserRouter>

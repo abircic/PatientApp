@@ -80,7 +80,7 @@ const updatePassword = async(req, res) => {
       .json(
         {
           sucess: false,
-          message: config.responseMessages.invalidUsernameMessage
+          message: config.responseMessages.invalidUsername
         })
   }
   if (!(await passwordHelper.comparePassword(req.body.oldPassword, user.password))) {
@@ -88,10 +88,10 @@ const updatePassword = async(req, res) => {
       .json(
         {
           sucess: false,
-          message: config.responseMessages.invalidPasswordMessage
+          message: config.responseMessages.invalidPassword
         })
   }
-  res.json({ sucess: true, message: config.responseMessages.successMessage })
+  res.json({ sucess: true, message: config.responseMessages.success })
 }
 
 const fetchDoctors = async(_req, res) => {

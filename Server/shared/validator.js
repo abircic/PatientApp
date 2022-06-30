@@ -4,6 +4,9 @@ const validateRequest = (request, schema, allowUnknown = true) => {
   if (schema === registerRequestValidationSchema) {
     if (!config.userRoles.some(x => x.id === request.type)) { return config.responseMessages.invalidType }
   }
+  if (schema === updatePasswordRequestValidationSchema && request.oldPassword === request.newPassword) {
+    return config.responseMessages.invalidUpdatePassword
+  }
   const result = schema.validate(request, { abortEarly: false, allowUnknown: allowUnknown })
   if (result.error) {
     return result.error.details.map(x => x.message)
