@@ -30,8 +30,8 @@ exports.getAppointments = async(transporter) => {
   if (appointments.length > 0) {
     for (const app of appointments) {
       try {
-        await sendMail(app, transporter)
-        await saveNotification(app)
+        const response = await sendMail(app, transporter)
+        await saveNotification(app, response)
       } catch (err) {
         console.log(err)
       }
@@ -39,13 +39,14 @@ exports.getAppointments = async(transporter) => {
   }
 }
 
-const saveNotification = async(appointment) => {
+const saveNotification = async(appointment, response) => {
   console.log(appointment)
   const notification = new Notification(
     {
       appointment: appointment,
       username: appointment.patient.username,
-      createdDate: Date.now()
+      createdDate: Date.now(),
+      key: response
     }
   )
   await notification.save()

@@ -134,7 +134,8 @@ const fetchByUserId = async(req, res) => {
         toDate: x.toDate,
         firstName: x.patient.firstName,
         lastName: x.patient.lastName,
-        status: x.status
+        status: x.status,
+        id: x._id
       }
     })
     return res.json({ success: true, appointments: appointment })
@@ -147,7 +148,8 @@ const fetchByUserId = async(req, res) => {
         toDate: x.toDate,
         firstName: x.doctor.firstName,
         lastName: x.doctor.lastName,
-        status: x.status
+        status: x.status,
+        id: x._id
       }
     })
     return res.json({ success: true, appointments: appointment })

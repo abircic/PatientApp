@@ -1,3 +1,4 @@
+import DropdownStatus from "./DropdownStatus.js";
 
 const AppointmentCard = ({appointment}) => {
   const fromDate = new Date(appointment.fromDate);
@@ -19,7 +20,7 @@ const AppointmentCard = ({appointment}) => {
       <td>{toDate.toLocaleString()}</td>
       <td>{appointment.firstName}</td>
       <td>{appointment.lastName}</td>
-      <td>{appointment.status}</td>
+      <td><DropdownStatus id={appointment.id} status={appointment.status}/></td>
     </tr>
   </tbody>
 </table>

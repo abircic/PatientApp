@@ -47,7 +47,6 @@ const Create = () =>{
     }
   };
   const handleDateChange = (e) => {
-    console.log(e)
     const value = e
     const name = "fromDate"
     setFormData((prevState) => ({

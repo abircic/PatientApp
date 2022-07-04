@@ -1,59 +1,56 @@
 import axios from 'axios'
 import { useRef, useState, useEffect } from 'react'
-import { useContext } from "react"
-import UserContext from '../context'
 
 const Dropdown = (props) => (
   <div className="form-group">
-
     <select
       className="form-control"
       name={props.name}
       onChange={props.onDropdownChange}
     >
-      <option defaultValue>Select</option>
+      <option defaultValue>{props.status}</option>
       {props.options.map((item, index) => (
         <option key={index} value={item.id}>
-          {item.firstName} {item.lastName}
+          {item}
         </option>
       ))}
     </select>
   </div>
 )
-
-const DropdownList = () => {
+const DropdownStatus = (props) => {
   const [name, setName] = useState(null)
   const [list, setList] = useState(null)
   const isInitalMount = useRef(true)
-  const userContext = useContext(UserContext)
-
   useEffect(() => {
     if(isInitalMount.current){
       isInitalMount.current = false
       async function fetchData()
       {
-          const response = await axios.get('http://localhost:3000/user/fetchDoctors')
-          setList(response.data.result)
+          setList(["scheduled","rescheduled","missed","canceled","done"])
       }
       fetchData()
     }
   }, [])
 
   const onDropdownChange = (e) => {
-    userContext.setDoctorId(e.target.value)
-    setName(e.target.value)
+    const request = { status:e.target.value, id: props.id}
+    async function sendRequest()
+    {
+        const response = await axios.put('http://localhost:3000/appointment/update', request)
+    }
+    sendRequest()
   }
 
   return (
     <div>
-      <h2>Choose doctor</h2>
       <Dropdown
         name={name}
         options={list ? list : []}
         onDropdownChange={onDropdownChange}
+        status={props.status}
       />
     </div>
   )
 }
 
-export default DropdownList
+export default DropdownStatus

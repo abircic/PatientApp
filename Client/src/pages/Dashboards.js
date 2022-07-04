@@ -9,6 +9,7 @@ const Dashboard = () =>{
   const {user, setUser} = useContext(UserContext)
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate()
+  console.log("dash",user)
   useEffect(() => {
     if(!user) {
       navigate("/user/login")

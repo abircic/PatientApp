@@ -32,7 +32,7 @@ mongoose.connect(process.env.DB_CONNECTION_STRING, { useNewUrlParser: true }, as
   console.log('Connected to DB!')
   rolesMigration()
   const transporter = await createTransport()
-  cron.schedule('* * * * * ', () => {
+  cron.schedule('* * * * *', () => {
     getAppointments(transporter)
   })
 

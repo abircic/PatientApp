@@ -6,8 +6,8 @@ const sendMail = async(appointment, transporter) => {
     console.debug(result)
     if (result.rejected.some(x => x)) {
       console.error(result.response)
-      return
     }
+    return result.response
   } catch (err) {
     console.error(err)
   }
