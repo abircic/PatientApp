@@ -11,7 +11,7 @@ const Dropdown = (props) => (
       name={props.name}
       onChange={props.onDropdownChange}
     >
-      <option defaultValue>Select</option>
+      <option defaultValue>Select doctor</option>
       {props.options.map((item, index) => (
         <option key={index} value={item.id}>
           {item.firstName} {item.lastName}
@@ -46,7 +46,6 @@ const DropdownList = () => {
 
   return (
     <div>
-      <h2>Choose doctor</h2>
       <Dropdown
         name={name}
         options={list ? list : []}

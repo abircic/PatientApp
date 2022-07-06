@@ -20,6 +20,7 @@ const Dropdown = (props) => (
 const DropdownStatus = (props) => {
   const [name, setName] = useState(null)
   const [list, setList] = useState(null)
+  const [errorMessage, setErrorMessage] = useState('');
   const isInitalMount = useRef(true)
   useEffect(() => {
     if(isInitalMount.current){
@@ -32,24 +33,27 @@ const DropdownStatus = (props) => {
     }
   }, [])
 
-  const onDropdownChange = (e) => {
+  const onDropdownChange = async(e) => {
     const request = { status:e.target.value, id: props.id}
-    async function sendRequest()
-    {
-        const response = await axios.put('http://localhost:3000/appointment/update', request)
+    try{
+      await axios.put('http://localhost:3000/appointment/update', request)
     }
-    sendRequest()
+    catch{
+      setErrorMessage("Oops something went wrong...")
+    }
   }
 
   return (
-    <div>
+    <><div>
       <Dropdown
         name={name}
         options={list ? list : []}
         onDropdownChange={onDropdownChange}
-        status={props.status}
-      />
+        status={props.status} />
     </div>
+    <div>
+    {errorMessage && <div className="error"> {errorMessage} </div>}
+      </div></>
   )
 }
 

@@ -1,5 +1,7 @@
 ## Description
+
 This is the backend application for patients and doctors involved in a process of booking an appointment. Patients are able to register themselves and login with valid credentials. Patients can book appointment on a working day except Monday and Thursday. Patient will get a reminder day before scheduled appointment. Both patient and doctor need to login and confirm an appointment as a prerequisite to mark the appointment as ‘Done’. Appointment can have following states: Scheduled, Rescheduled, Missed, Canceled and Done.
+
 ## Installation
 
 ### Prerequisites
@@ -9,14 +11,18 @@ This is the backend application for patients and doctors involved in a process o
 - [Mongo](https://www.mongodb.com/try/download)
 
 ## Instructions for starting application
+
 Instructions for starting an application:
-1. clone repository with “git clone https://github.com/agilathon/ante_bircic.git"
+
+1. clone repository with “git clone https://github.com/abircic/PatientApp.git"
 2. open terminal and run “npm install”
-3.  create `.env` file with configuration
- ```
+3. create `.env` file with configuration
+
+```
 PORT=3000
 DB_CONNECTION_STRING=mongodb+srv://antebircic:agilathon@cluster0.i66v0.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
- ```
+```
+
 4. run “npm start”
 5. download and install Postman
 
@@ -25,8 +31,10 @@ DB_CONNECTION_STRING=mongodb+srv://antebircic:agilathon@cluster0.i66v0.mongodb.n
 **Example success response**
 
 ### POST http://localhost:3000/user/register
+
 Type field determines if user is registering as doctor or patient. “1" stand for doctor, “2” is for patient.
 **Request**
+
 ```
 {
 	"firstName": "testName",
@@ -36,79 +44,97 @@ Type field determines if user is registering as doctor or patient. “1" stand f
 	"password":"pass1234"
 }
 ```
+
 **Response**
+
 ```
 {
 	"success":"true"
 	"message":"success"
 }
 ```
-**In case of error API returns response containing status code and message:
+
+\*\*In case of error API returns response containing status code and message:
 
 **Example error response**
 status code: 400
+
 ```
 {
 	"sucess:"false,
 	"message":"already_exist"
 }
 ```
+
 ```
 {
 	"sucess:"false,
 	"message":"invalid_username"
 }
 ```
+
 ```
 {
 	"sucess:"false,
 	"message":"invalid_type"
 }
 ```
+
 status code: 500
+
 ```
 {
 	"sucess:"false,
 	"message":"unexpected_error_occurred"
 }
 ```
+
 ### POST http://localhost:3000/user/login
 
 **Request**
+
 ```
 {
 	"username":"test@test.com",
 	"password":"pass1234"
 }
 ```
+
 **Response**
+
 ```
 {
 	"success":"true"
 	"message":"success"
 }
 ```
+
 **Example error response**
 status code: 400
 **Response**
+
 ```
 {
 	"success":"false"
 	"message":"invalid_username"
 }
 ```
+
 **Response**
+
 ```
 {
 	"success":"false"
 	"message":"invalid_password"
 }
 ```
+
 **Example success response**
 
 ### PUT http://localhost:3000/user/updatePassword
 
 **Request**
+
 ```
 {
 	"username":"test@test.com",
@@ -118,32 +144,40 @@ status code: 400
 ```
 
 **Response**
+
 ```
 {
 	"success":"true"
 	"message":"success"
 }
 ```
+
 **Example error response**
 status code: 400
 **Response**
+
 ```
 {
 	"success":"false"
 	"message":"invalid_username"
 }
 ```
+
 **Response**
+
 ```
 {
 	"success":"false"
 	"message":"invalid_password"
 }
 ```
+
 ### GET http://localhost:3000/user/fetchDoctors
-Used for fetching doctors 
+
+Used for fetching doctors
 
 **Response**
+
 ```
 {
 
@@ -168,9 +202,11 @@ Used for fetching doctors
 	]
 }
 ```
+
 ### POST http://localhost:3000/appointment/create
 
 **Request**
+
 ```
 {
     "doctorId":"6241b1a4165a23dce6f1d386",
@@ -178,7 +214,9 @@ Used for fetching doctors
     "fromDate":"2022-04-06T17:30:05.511Z"
 }
 ```
+
 **Response**
+
 ```
 {
     "success": true,
@@ -186,39 +224,49 @@ Used for fetching doctors
 		"appointmentId:"6241b1a4165a23dce6f1d386"
 }
 ```
+
 **Example error response**
 status code: 400
 **Response**
+
 ```
 {
     "success": false,
     "message": "invalid_day_of_week"
 }
 ```
+
 **Response**
+
 ```
 {
 	"success":"false"
 	"message":"invalid_password"
 }
 ```
+
 **Response**
+
 ```
 {
     "success": false,
     "message": "appointment_can_not_be_today"
 }
 ```
+
 **Response**
+
 ```
 {
     "success": false,
     "message": "invalid_doctor_id"
 }
 ```
+
 ### PUT http://localhost:3000/appointment/update
 
 **Request**
+
 ```
 {
     "id":"62441da4c5acba2afa443bb1",
@@ -226,7 +274,9 @@ status code: 400
     "status":"done"
 }
 ```
+
 **Response**
+
 ```
 {
     "success": true,
@@ -234,23 +284,29 @@ status code: 400
 		"appointment:" "id"
 }
 ```
+
 **Example error response**
 status code: 400
 **Response**
+
 ```
 {
     "success": false,
     "message": "doctor_already_has_an_appointment_at_this_time"
 }
 ```
+
 **Response**
+
 ```
 {
     "success": false,
     "message": "invalid_day_of_week"
 }
 ```
+
 **Response**
+
 ```
 {
     "success": false,
