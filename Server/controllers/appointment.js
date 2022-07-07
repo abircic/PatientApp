@@ -105,8 +105,11 @@ const validateUsers = async(patientId, doctorId) => {
 
 const validateAndSaveAppointment = async(fromDate, patientModel, doctorModel) => {
   // validate doctor appointments
-  const appointments = await Appointment.find({ doctorId: doctorModel._id })
-  if (appointments.some(x => x.fromDate.getTime() === fromDate.getTime())) {
+  const appointments = await Appointment.find({
+    $or: [{ doctor: doctorModel, fromDate: fromDate },
+      { patient: patientModel, fromDate: fromDate }]
+  })
+  if (appointments.length > 0) {
     return { message: config.responseMessages.invalidAppointmentDate }
   }
   const appointment = new Appointment(

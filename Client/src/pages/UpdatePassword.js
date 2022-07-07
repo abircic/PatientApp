@@ -72,7 +72,7 @@ return(
         </div>
 
         {/* <!-- Submit button --> */}
-        <button type="submit" className="btn btn-primary btn-lg btn-block">Sign in</button>
+        <button type="submit" className="btn btn-primary btn-lg btn-block">Update password</button>
 
       </form>
       {errorMessage && <div className="error"> {errorMessage} </div>}

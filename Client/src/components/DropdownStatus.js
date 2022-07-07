@@ -5,7 +5,6 @@ const Dropdown = (props) => (
   <div className="form-group">
     <select
       className="form-control"
-      name={props.name}
       onChange={props.onDropdownChange}
     >
       <option defaultValue>{props.status}</option>
@@ -18,7 +17,6 @@ const Dropdown = (props) => (
   </div>
 )
 const DropdownStatus = (props) => {
-  const [name, setName] = useState(null)
   const [list, setList] = useState(null)
   const [errorMessage, setErrorMessage] = useState('');
   const isInitalMount = useRef(true)
@@ -46,7 +44,6 @@ const DropdownStatus = (props) => {
   return (
     <><div>
       <Dropdown
-        name={name}
         options={list ? list : []}
         onDropdownChange={onDropdownChange}
         status={props.status} />
