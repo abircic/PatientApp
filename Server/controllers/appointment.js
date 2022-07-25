@@ -46,8 +46,8 @@ const updateOne = async(req, res) => {
     }
     // validate doctor appointments
     const appointments = await Appointment.find({ doctorId: appointment.doctorId })
-    if (appointments.some(x => x.fromDate.getTime() === fromDate.getTime())) {
-      throw new ValidationError(config.responseMessages.invalidAppointmentDate)
+    if (appointments.length > 0) {
+      return { message: config.responseMessages.invalidAppointmentDate }
     }
     appointment.fromDate = fromDate
     appointment.toDate = date.addMinutes(fromDate, 30)
@@ -62,6 +62,7 @@ const updateOne = async(req, res) => {
   await appointment.save()
   res.json({ success: true, message: config.responseMessages.success, appointmentId: appointment._id })
 }
+
 const validateDateTime = async(fromDate) => {
 
   const dateNow = new Date(Date.now())

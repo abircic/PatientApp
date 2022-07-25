@@ -36,8 +36,16 @@ const DropdownStatus = (props) => {
     try{
       await axios.put('http://localhost:3000/appointment/update', request)
     }
-    catch{
-      setErrorMessage("Oops something went wrong...")
+    catch(err){
+      if(err.response && err.response.status === 400)
+      {
+        console.log(err)
+        setErrorMessage(err.response.data.message)
+        //alert(err.response.data.message);
+      }
+      else{
+        setErrorMessage("Oops something went wrong...")
+      }
     }
   }
 

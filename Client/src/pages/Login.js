@@ -1,14 +1,12 @@
 import { useState, useContext } from "react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import UserContext from "../context"
 
 const Login = () =>{ 
   const[formData, setFormData] = useState()
   const navigate = useNavigate()
   const [errorMessage, setErrorMessage] = useState('');
 
-  const { setUser} = useContext(UserContext)
   const handleSubmit = async (e)=>{
     e.preventDefault()
   try{
@@ -16,7 +14,9 @@ const Login = () =>{
     const response = await axios.post('http://localhost:3000/user/login',
       request
     )
-    setUser({id:response.data.id, type : response.data.type, username : formData.username})
+    localStorage.setItem("id", response.data.id)
+    localStorage.setItem("type", response.data.type)
+    localStorage.setItem("username", formData.username)
     //navigate("/appointment/fetch")
     navigate("/")
   }

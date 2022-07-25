@@ -1,5 +1,5 @@
 
-import { useState, useContext, useEffect } from "react"
+import { useState, useEffect } from "react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import UserContext from "../context";
@@ -8,18 +8,17 @@ const UpdatePassword = () =>{
   const[formData, setFormData] = useState()
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate()
-  const {user, setUser } = useContext(UserContext)
+  const id = localStorage.getItem("id")
+  const username = localStorage.getItem("username")
   useEffect(() => {
-    if(!user) {
-      {
-        navigate("/user/login")
-      }
+    if(!id || !username) {
+      navigate("/user/login")
     }
   }, [])
   const handleSubmit = async (e)=>{
     e.preventDefault()
    try{
-    const request = {username: user?.username, oldPassword: formData.oldPassword, newPassword: formData.newPassword}
+    const request = {username: username, oldPassword: formData.oldPassword, newPassword: formData.newPassword}
      const response = await axios.put('http://localhost:3000/user/updatePassword',
        request
      )

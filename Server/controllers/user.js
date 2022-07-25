@@ -111,4 +111,5 @@ const fetchDoctors = async(_req, res) => {
       }
     )
 }
+
 module.exports = { registration, login, updatePassword, fetchDoctors }

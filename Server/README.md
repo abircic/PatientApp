@@ -313,3 +313,31 @@ status code: 400
     "message": "invalid_status"
 }
 ```
+
+### GET http://localhost:3000/appointment/fetch?id=6268f857f9c08e74b301d7d5&type=2
+
+**Response**
+
+```
+{
+    "success": true,
+    "appointments": [
+        {
+            "fromDate": "2022-04-28T08:00:00.000Z",
+            "toDate": "2022-04-28T08:30:00.000Z",
+            "firstName": "Ivan",
+            "lastName": "Ivic",
+            "status": "done",
+            "id": "6268f8c7f9c08e74b301d856"
+        },
+        {
+            "fromDate": "2022-04-29T09:00:00.000Z",
+            "toDate": "2022-04-29T09:30:00.000Z",
+            "firstName": "Filip",
+            "lastName": "Filipic",
+            "status": "missed",
+            "id": "6268f931f9c08e74b301d8e2"
+        }
+    ]
+}
+```

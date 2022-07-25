@@ -11,10 +11,11 @@ const Create = () =>{
   const[formData, setFormData] = useState()
   const navigate = useNavigate()
   const [errorMessage, setErrorMessage] = useState('');
-  const {user, setUser, doctorId, setDoctorId } = useContext(UserContext)
-
+  const {doctorId, setDoctorId } = useContext(UserContext)
+  const id = localStorage.getItem("id")
+  const username = localStorage.getItem("username")
   useEffect(() => {
-    if(!user) {
+    if(!id || !username) {
       navigate("/user/login")
     }
   }, [])
@@ -27,7 +28,7 @@ const Create = () =>{
       return
     }
     try{
-      const request = {fromDate : formData?.fromDate, patientId : user.id, doctorId : doctorId}
+      const request = {fromDate : formData?.fromDate, patientId : id, doctorId : doctorId}
       await axios.post('http://localhost:3000/appointment/create',
       request
       )

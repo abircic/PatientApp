@@ -2,12 +2,12 @@ import logo from "../images/logo.jpeg"
 import { useContext, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import UserContext from "../context"
-import { DropdownButton, Dropdown } from "react-bootstrap"
 const Nav = () =>{
-  const {user, setUser } = useContext(UserContext)
   const navigate = useNavigate()
   const Logout = ()=>{
-    setUser(null)
+    localStorage.removeItem("id")
+    localStorage.removeItem("type")
+    localStorage.removeItem("username")
     navigate("/user/login")
   }
   return(
@@ -32,7 +32,7 @@ const Nav = () =>{
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
     
             {/* <!-- Link --> */}
-            {user ? 
+            {localStorage.getItem("id") ? 
                 <>
                 <li className="nav-item">
                 <a className="nav-link" type = "button" onClick={() => navigate("/")}>Dashboard</a>
@@ -45,10 +45,10 @@ const Nav = () =>{
                 </li>
                 <div className="user-info-container">
                 <li className="nav-item">
-                  <a className="nav-link" style={{fontWeight:"bold"}}>{user?.type === 1 ? "Doctor": "Patient"}</a>
+                  <a className="nav-link" style={{fontWeight:"bold"}}>{localStorage.getItem("type")?.type === 1 ? "Doctor": "Patient"}</a>
                   </li>
                   <li className="nav-item">
-                  <a className="nav-link" style={{fontWeight:"bold"}}>{user?.username}</a>
+                  <a className="nav-link" style={{fontWeight:"bold"}}>{localStorage.getItem("username")}</a>
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" type = "button" onClick={() => Logout()}>LogOut</a>
